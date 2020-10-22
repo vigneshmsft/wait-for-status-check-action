@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+       
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+
+    - name: Build
+      run: |
+        dotnet restore
+        dotnet build --configuration Release --no-restore --output ./app
+
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v1.1.1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        repository: vigneshmsft/wait-for-status-check-action
+        tags: ${{ github.sha }}
+        path: ./.github
