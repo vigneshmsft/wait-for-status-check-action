@@ -1,6 +1,10 @@
 name: 'Wait for status checks'
 description: 'Waits for a GitHub status check to complete.'
 inputs:
+  github-token:
+    description: The GitHub token used to create an authenticated client
+    default: ${{ github.token }}
+    required: false
   status-check-name:
     description: 'Name of the GitHub status check'
     required: true
@@ -10,7 +14,11 @@ inputs:
     required: false
     default: ''
   sha:
-    description: 'The commit sha to check for the status. default github.sha'
+    description: 'Commit sha to check for the status. default github.sha'
+    required: false
+    default: ${{ github.sha }}
+  multi-line-text:
+    description: 'A multi line test'
     required: false
     default: ''
 outputs:
@@ -20,6 +28,8 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.status-check-name }}
+    - ${{ inputs.github-token }}
     - ${{ inputs.repository }}
     - ${{ inputs.sha }}
+    - ${{ inputs.status-check-name }}
+    - ${{ inputs.multi-line-text }}
