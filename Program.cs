@@ -43,7 +43,9 @@ namespace WaitForStatusCheckAction
             if (!statuses.Any())
             {
                 Console.WriteLine($"No commit status found in repo for the given sha.");
+                Console.WriteLine($"Waiting for {context.WaitInterval.TotalSeconds}s before next check");
                 await Task.Delay(context.WaitInterval);
+                await CheckCommitStatus(context);
                 return;
             }
             foreach (var status in statuses)
