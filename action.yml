@@ -6,9 +6,13 @@ inputs:
     required: true
     default: ''
   repository:
-    description: 'Name of the GitHub repository eg: github/octocat'
+    description: 'Name of the GitHub repository eg: github/octocat, default: github.repository'
     required: false
-    default: ${{ env.GITHUB_REPOSITORY }}
+    default: ''
+  sha:
+    description: 'The commit sha to check for the status. default github.sha'
+    required: false
+    default: ''
 outputs:
   time:
     description: 'The time the action was completed'
@@ -17,4 +21,5 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.status-check-name }}
-    - ${{ inputs.repository}}
+    - ${{ inputs.repository }}
+    - ${{ inputs.sha }}
