@@ -5,9 +5,13 @@ jobs:
     runs-on: ubuntu-latest
     name: A job to say hello
     steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
     - name: Wait for status check
       id: wait_for_status_check
-      uses: vigneshmsft/wait-for-status-check-action@v0.1.0
+      #uses: vigneshmsft/wait-for-status-check-action@v0.1.0
+      uses: ./
       with:
         status-check-name: 'Octocat'
     
