@@ -12,4 +12,5 @@ RUN dotnet publish -c Release -o /app --no-restore
 FROM mcr.microsoft.com/dotnet/core/runtime:3.1
 WORKDIR /app
 COPY --from=build /app .
-ENTRYPOINT ["./WaitForStatusCheckAction"]
+COPY --from=build /source/entryPoint.sh .
+ENTRYPOINT ["./entryPorint.sh"]
