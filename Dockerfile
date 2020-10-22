@@ -13,4 +13,5 @@ FROM mcr.microsoft.com/dotnet/core/runtime:3.1
 WORKDIR /app
 COPY --from=build /app .
 COPY --from=build /source/entryPoint.sh .
+RUN pwd && ls
 ENTRYPOINT ["./entryPorint.sh"]
