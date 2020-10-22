@@ -1,0 +1,15 @@
+name: 'Wait for status checks'
+description: 'Waits for a GitHub status check to complete.'
+inputs:
+  status-check-name:
+    description: 'Name of the GitHub status check'
+    required: true
+    default: ''
+outputs:
+  time:
+    description: 'The time the action was completed'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.status-check-name }}
