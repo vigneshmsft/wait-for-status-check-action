@@ -1,14 +1,21 @@
 name: 'Wait for status checks'
 description: 'Waits for GitHub one or more status check to complete for the specified commit'
 inputs:
+  status-checks:
+    description: 'Name of the GitHub status check'
+    required: true
+  time-interval:
+    description: 'Time interval in seconds between checks on the status. default 15'
+    required: false
+    default: '15'
+  wait-time:
+    description: 'Total time to wait before the action timesout'
+    required: false
+    default: '120'    
   github-token:
     description: 'The GitHub token used to create an authenticated client'
     default: ${{ github.token }}
     required: false
-  status-checks:
-    description: 'Name of the GitHub status check'
-    required: true
-    default: ''
   repository:
     description: 'Name of the GitHub repository eg: github/octocat, default: github.repository'
     required: false
@@ -30,3 +37,5 @@ runs:
     - ${{ inputs.repository }}
     - ${{ inputs.sha }}
     - ${{ inputs.status-checks }}
+    - ${{ inputs.time-interval }}
+    - ${{ inputs.wait-time }}

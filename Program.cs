@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -28,12 +30,22 @@ namespace WaitForStatusCheckAction
             Console.WriteLine($"StatusCheckName: {context.StatusChecks.AsCsv()}");
             Console.WriteLine($"Repository: {context.Repository}");
             Console.WriteLine($"Sha: {context.Sha}");
-            await GetCommitStatus(context);
+            Console.WriteLine($"Check Interval: {context.WaitInterval}");
+            Console.WriteLine($"Timeout: {context.Timeout}");
+            
+            Task.WaitAll(new[]{CheckCommitStatus(context)}, (int)context.Timeout.TotalMilliseconds);
+            await Task.CompletedTask;
         }
 
-        private static async Task GetCommitStatus(Context context)
+        private static async Task CheckCommitStatus(Context context)
         {
             var statuses = await apiClient.GetFromJsonAsync<Status[]>($"/repos/{context.Repository}/commits/{context.Sha}/statuses");
+            if (!statuses.Any())
+            {
+                Console.WriteLine($"No commit status found in repo for the given sha.");
+                await Task.Delay(context.WaitInterval);
+                return;
+            }
             foreach (var status in statuses)
             {
                 Console.WriteLine($"{status.Context} is at state {status.State}");
