@@ -56,8 +56,14 @@ namespace WaitForStatusCheckAction
                 return status.State.Equals("success");
             });
 
-            var returnTask = done ? Task.CompletedTask : CheckCommitStatus(context);
-            await returnTask;
+            if (!done)
+            {
+                await Task.Delay(context.WaitInterval);
+                await CheckCommitStatus(context);
+                return;
+            }
+
+            await Task.CompletedTask;
         }
 
         private static void InitialiseApiClient(Context context)
