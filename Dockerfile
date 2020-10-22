@@ -14,4 +14,4 @@ WORKDIR /app
 COPY --from=build /app .
 COPY --from=build /source/entryPoint.sh .
 RUN pwd && ls
-ENTRYPOINT ["./entryPoint.sh"]
+ENTRYPOINT ["/app/WaitForStatusCheckAction"]
