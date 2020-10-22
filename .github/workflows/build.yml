@@ -17,17 +17,18 @@ jobs:
       with:
         dotnet-version: 3.1.301
 
-    - name: Build
+    - name: dotnet build
       run: |
         dotnet restore
         dotnet build --configuration Release --no-restore --output ./app
 
-    - name: Build & push Docker image
+    - name: docker build & push ${{ env.DOCKER_IMAGE }}
       run: |
         docker build -f ./.github/Dockerfile -t ${{ env.DOCKER_IMAGE }} .
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+        docker images
         docker push ${{ env.DOCKER_IMAGE }}
       env:
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-        DOCKER_IMAGE: ${{ format('vigneshmsft/wait-for-status-check-action-{0}', github.sha )}}
+        DOCKER_IMAGE: ${{ format('vigneshmsft/wait-for-status-check-action:{0}', github.sha )}}
