@@ -25,7 +25,7 @@ namespace WaitForStatusCheckAction
 
         private static async Task WaitForStatusCheckAction(Context context)
         {
-            Console.WriteLine($"StatusCheckName: {context.StatusCheckName}");
+            Console.WriteLine($"StatusCheckName: {context.StatusChecks.AsCsv()}");
             Console.WriteLine($"Repository: {context.Repository}");
             Console.WriteLine($"Sha: {context.Sha}");
             await GetCommitStatus(context);

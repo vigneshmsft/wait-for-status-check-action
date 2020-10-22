@@ -13,10 +13,9 @@ jobs:
       #uses: vigneshmsft/wait-for-status-check-action@v0.1.0
       uses: ./
       with:
-        status-check-name: 'smoke-tests-qa'
-        multi-line-text: |
-          one
-          two
+        status-checks: |
+          'smoke-tests-qa'
+          'smoke-tests-production'
 
     - name: Get the output time
       run: echo "The time was ${{ steps.wait_for_status_check.outputs.time }}"
