@@ -1,2 +1,2 @@
-FROM vigneshmsft/wait-for-status-check-action:bdc8ab38210fa1ad3baa2abde76e2ac28e8f0fe8
+FROM vigneshmsft/wait-for-status-check-action:91a8b33b84fd7f9f1e037eb2a2d21319d3cd8124
 ENTRYPOINT ["/app/WaitForStatusCheckAction"]
