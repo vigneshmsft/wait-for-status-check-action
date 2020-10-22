@@ -39,6 +39,7 @@ namespace WaitForStatusCheckAction
         private static async Task CheckCommitStatus(Context context)
         {
             var statuses = await apiClient.GetFromJsonAsync<Status[]>($"/repos/{context.Repository}/commits/{context.Sha}/statuses");
+            statuses.WriteToConsole();
             var requiredStatus = statuses.Where(s => context.StatusChecks.Contains(s.Context, StringComparer.InvariantCultureIgnoreCase));
             if (!requiredStatus.Any())
             {
@@ -52,7 +53,7 @@ namespace WaitForStatusCheckAction
             var statusChecksStates = new bool[context.StatusChecks.Length];
             var done = requiredStatus.All(status =>
             {
-                Console.WriteLine($"{status.Context} is at state {status.State}");
+                status.WriteToConsole();
                 return status.State.Equals("success");
             });
 
