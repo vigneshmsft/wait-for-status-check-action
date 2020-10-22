@@ -5,6 +5,10 @@ inputs:
     description: 'Name of the GitHub status check'
     required: true
     default: ''
+  repository:
+    description: 'Name of the GitHub repository eg: github/octocat'
+    required: false
+    default: ${{ env.GITHUB_REPOSITORY }}
 outputs:
   time:
     description: 'The time the action was completed'
@@ -13,3 +17,4 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.status-check-name }}
+    - ${{ inputs.repository}}
