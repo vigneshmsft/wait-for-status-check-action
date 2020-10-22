@@ -23,4 +23,3 @@ runs:
     - ${{ inputs.status-check-name }}
     - ${{ inputs.repository }}
     - ${{ inputs.sha }}
-    - ${{ github.workspace }}

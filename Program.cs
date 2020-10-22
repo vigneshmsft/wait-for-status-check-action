@@ -6,11 +6,6 @@ namespace WaitForStatusCheckAction
     {
         static void Main(string[] args)
         {
-            foreach (var arg in args)
-            {
-                Console.WriteLine($"{arg}");
-            }
-
             var statusCheckName = args[0];
             var repository = args[1].NullIfEmpty() ?? Environment.GetEnvironmentVariable("GITHUB_REPOSITORY");
             var sha = args[2].NullIfEmpty() ?? Environment.GetEnvironmentVariable("GITHUB_SHA");
