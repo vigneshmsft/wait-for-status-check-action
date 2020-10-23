@@ -13,4 +13,11 @@ namespace WaitForStatusCheckAction
             return $"Id: {Id} Context: {Context} State: {State}";
         }
     }
+
+    public class CombinesStatus
+    {
+        public string State { get; set; }
+
+        public Status[] Statuses { get; set; }
+    }
 }

@@ -21,7 +21,6 @@ namespace WaitForStatusCheckAction
             var context = Context.FromArgs(args);
             InitialiseApiClient(context);
             await WaitForStatusCheckAction(context);
-            Console.WriteLine($"::set-output name=time::{DateTime.Now}");
         }
 
         private static async Task WaitForStatusCheckAction(Context context)
@@ -31,14 +30,19 @@ namespace WaitForStatusCheckAction
             Console.WriteLine($"::debug::Sha: {context.Sha}");
             Console.WriteLine($"::debug::Check Interval: {context.WaitInterval.TotalSeconds}s");
             Console.WriteLine($"::debug::Timeout: {context.Timeout.TotalSeconds}s");
-
-            Task.WaitAll(new[] { CheckCommitStatus(context) }, (int)context.Timeout.TotalMilliseconds);
+            
+            var completedInTime = Task.WaitAll(new[] { CheckCommitStatus(context) }, (int)context.Timeout.TotalMilliseconds);
+            if (!completedInTime)
+            {
+                Console.WriteLine($"::set-output name=conclusion::timed_out");
+            }
             await Task.CompletedTask;
         }
 
         private static async Task CheckCommitStatus(Context context)
         {
-            var statuses = await apiClient.GetFromJsonAsync<Status[]>($"/repos/{context.Repository}/commits/{context.Sha}/statuses");
+            var combinedStatus = await apiClient.GetFromJsonAsync<CombinesStatus>($"/repos/{context.Repository}/commits/{context.Sha}/status");
+            var statuses = combinedStatus.Statuses;
             statuses.WriteToConsole();
             var requiredStatus = statuses.Where(s => context.StatusChecks.Contains(s.Context, StringComparer.InvariantCultureIgnoreCase));
             if (!requiredStatus.Any())
@@ -59,11 +63,12 @@ namespace WaitForStatusCheckAction
 
             if (!done)
             {
+                Console.WriteLine($"::set-output name=conclusion::failure");
                 await Task.Delay(context.WaitInterval);
                 await CheckCommitStatus(context);
                 return;
             }
-
+            Console.WriteLine($"::set-output name=conclusion::success");
             await Task.CompletedTask;
         }
 

@@ -9,16 +9,27 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Wait for status check
-      id: wait_for_status_check
+      id: wait_for_status_check_on_find
       #uses: vigneshmsft/wait-for-status-check-action@v0.1.0
       uses: ./
       with:
         github-token: ${{ secrets.TEST_TOKEN }}
         repository: DFE-Digital/find-teacher-training
-        sha: 53cbfa183856adc470a9f6ba8a59860f2359f8d7
+        sha: fd42135cf69cd32a93c645d48be2cf9e66023bf5
         status-checks: |
-          'smoke-tests-qa'
-          'smoke-tests-production'
+          smoke-tests-qa
+          smoke-tests-staging
+          smoke-tests-production
 
-    - name: Get the output time
-      run: echo "The time was ${{ steps.wait_for_status_check.outputs.time }}"
+    - name: Wait for status check
+      id: wait_for_status_check_not_exists
+      #uses: vigneshmsft/wait-for-status-check-action@v0.1.0
+      uses: ./
+      with:
+        github-token: ${{ secrets.TEST_TOKEN }}
+        status-checks: non-existent-check
+
+    - name: Get the outcome
+      run: |
+        echo "wait_for_status_check_on_find conclusion was ${{ steps.wait_for_status_check_on_find.outputs.conclusion }}"
+        echo "wait_for_status_check_not_exists conclusion was ${{ steps.wait_for_status_check_not_exists.outputs.conclusion }}"

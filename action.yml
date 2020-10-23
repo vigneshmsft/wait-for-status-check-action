@@ -5,13 +5,13 @@ inputs:
     description: 'Name of the GitHub status check'
     required: true
   time-interval:
-    description: 'Time interval in seconds between checks on the status. default 15'
+    description: 'Time interval in seconds between checks on the status. default 15 seconds'
     required: false
     default: '15'
   wait-time:
-    description: 'Total time to wait before the action timesout'
+    description: 'Total time to wait before the action timesout, default 240 seconds'
     required: false
-    default: '120'    
+    default: '240'
   github-token:
     description: 'The GitHub token used to create an authenticated client'
     default: ${{ github.token }}
@@ -25,10 +25,8 @@ inputs:
     required: false
     default: ${{ github.sha }}
 outputs:
-  time:
-    description: 'The time the action was completed'
-  outcome:
-    description: 'The outcome of the action'  
+  conclusion:
+    description: 'The conclusion of the action, can be success, failure or timed_out'  
 runs:
   using: 'docker'
   image: 'Dockerfile'
